@@ -9,6 +9,8 @@ import javax.ws.rs.core.Response
 
 import static groovy.json.JsonOutput.toJson
 import static javax.ws.rs.core.Response.Status.NOT_FOUND
+import static javax.ws.rs.core.Response.ok
+import static javax.ws.rs.core.Response.status
 
 @Path("/opwekking/spotify")
 class OpwekkingSongIDsService {
@@ -20,9 +22,9 @@ class OpwekkingSongIDsService {
         String trackId = OpwekkingSongIDs.fetch()?.getAt(bundle)?.getAt(number)
 
         if (trackId) {
-            Response.ok(toJson(trackId: trackId)).build()
+            ok(toJson(trackId: trackId)).build()
         } else {
-            Response.status(NOT_FOUND).entity(toJson(error: "Song cannot be found")).build()
+            status(NOT_FOUND).entity(toJson(error: 'Song cannot be found.')).build()
         }
     }
 
@@ -30,12 +32,12 @@ class OpwekkingSongIDsService {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/bundle/{bundle}")
     public Response getBundle(@PathParam("bundle") String bundle) {
-        def trackIds = OpwekkingSongIDs.fetch()?.getAt(bundle)
+        Map<Integer, String> trackIds = OpwekkingSongIDs.fetch()?.getAt(bundle)
 
         if (trackIds) {
-            Response.ok(toJson(trackIds.sort())).build()
+            ok(toJson(trackIds.sort())).build()
         } else {
-            Response.status(NOT_FOUND).entity(toJson(error: "Bundle cannot be found")).build()
+            status(NOT_FOUND).entity(toJson(error: 'Bundle cannot be found.')).build()
         }
     }
 }
