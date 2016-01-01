@@ -15,7 +15,7 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND
 import static javax.ws.rs.core.Response.ok
 import static javax.ws.rs.core.Response.status
 
-@Path("/opwekking")
+@Path('/opwekking')
 class OpwekkingSongsService extends Service {
 
     @GET
