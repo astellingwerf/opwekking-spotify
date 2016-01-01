@@ -13,7 +13,7 @@ import java.util.regex.Pattern
 import static com.wrapper.spotify.Api.DEFAULT_API
 import static nl.annestellingwerf.opwekking.spotify.SpotifyClientConstants.MARKET
 
-class OpwekkingSongIDs {
+class OpwekkingSongs {
     private static final Pattern SONG_NUMBER_PATTERN = ~/^.*\((\d+)\)( - Live)?$/
     private static final String OPWEKKING_ARTIST_NAME = 'Stichting Opwekking'
 
@@ -45,7 +45,11 @@ class OpwekkingSongIDs {
                     DEFAULT_API.getAlbum(album.id).<Album> invoke().tracks.items.each {
                         Matcher m = SONG_NUMBER_PATTERN.matcher(it.name)
                         if (m.matches()) {
-                            allSongs[normalizeAlbumName(album)][m.group(1) as int] = it.uri
+                            allSongs[normalizeAlbumName(album)][m.group(1) as int] = [
+                                    spotifyTrackId: it.uri,
+                                    spotifyTrackPreviewUrl: it.getPreviewUrl(),
+                                    title: it.name,
+                                    albumCovers: album.images]
                         }
                     }
                 }
