@@ -1,7 +1,7 @@
 .DS_Store
 
-bin
-build
+bin/
+build/
 .settings
 .classpath
 .project
@@ -11,6 +11,6 @@ build
 *.iml
 *.iws
 
-.gradle
+.gradle/
 
-webapps
+webapps/
