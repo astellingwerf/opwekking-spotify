@@ -36,7 +36,7 @@ class OpwekkingSongs {
     }
 
     @Memoized
-    public static Map<String, Map<Integer, String>> fetch() {
+    public synchronized static Map<String, Map<Integer, String>> fetch() {
         Map<String, Map<Integer, String>> allSongs = [:].withDefault { key -> [:] }
 
         use(SpotifyExtensions) {
