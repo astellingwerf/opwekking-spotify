@@ -12,6 +12,7 @@ class SpotifyExtensions {
     static final int itemsPerPage = 10
 
     public static <T> void iteratePages(Closure<Page<T>> getter, Closure action) {
+        getter = getter.memoize()
         int pageCount = (getter(0).total / itemsPerPage).setScale(0, RoundingMode.CEILING) as int
         (0..pageCount)
                 .collect { getter(it) }
