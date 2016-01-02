@@ -40,9 +40,15 @@ class OpwekkingSongs {
         Map<String, Map<Integer, String>> allSongs = [:].withDefault { key -> [:] }
 
         use(SpotifyExtensions) {
+            List<String> albumIds = []
             DEFAULT_API.iterateAlbums(MARKET, opwekkingArtistId) { Page<SimpleAlbum> page ->
-                page.items.each { SimpleAlbum album ->
-                    DEFAULT_API.getAlbum(album.id).<Album> invoke().tracks.items.each {
+                albumIds += page.items*.id
+            }
+
+            // getAlbums accepts at most 20 IDs at a time
+            albumIds.collate(20).each { twentyAlbumIds ->
+                DEFAULT_API.getAlbums(twentyAlbumIds).<List<Album>> invoke().each { Album album ->
+                    album.tracks.items.each {
                         Matcher m = SONG_NUMBER_PATTERN.matcher(it.name)
                         if (m.matches()) {
                             allSongs[normalizeAlbumName(album)][m.group(1) as int] = [
@@ -59,7 +65,7 @@ class OpwekkingSongs {
         return allSongs
     }
 
-    private static String normalizeAlbumName(SimpleAlbum album) {
+    private static String normalizeAlbumName(Album album) {
         switch (album.name.takeWhile { !Character.isDigit(it) }
                 .trim()
                 .toLowerCase()
