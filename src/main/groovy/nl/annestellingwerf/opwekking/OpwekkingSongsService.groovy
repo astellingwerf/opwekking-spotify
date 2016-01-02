@@ -1,6 +1,6 @@
 package nl.annestellingwerf.opwekking
 
-import nl.annestellingwerf.Service
+import nl.annestellingwerf.PublicAPI
 import nl.annestellingwerf.opwekking.spotify.OpwekkingSongs
 
 import javax.ws.rs.GET
@@ -16,7 +16,7 @@ import static javax.ws.rs.core.Response.ok
 import static javax.ws.rs.core.Response.status
 
 @Path('/opwekking')
-class OpwekkingSongsService extends Service {
+class OpwekkingSongsService extends PublicAPI {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
