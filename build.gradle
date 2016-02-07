@@ -1,3 +1,7 @@
+plugins {
+    id 'com.moowork.gulp' version '0.11'
+}
+
 apply plugin: 'idea'
 
 apply plugin: 'java'
@@ -22,8 +26,19 @@ dependencies {
     runtime 'javax.servlet:jstl:1.1.2'
 }
 
+gulp {
+    workDir = file('src/main/polymer/')
+}
+
+gulp_default.inputs.dir gulp.workDir.absolutePath + '/app/'
+gulp_default.outputs.dir gulp.workDir.absolutePath + '/dist/'
+
 war {
     destinationDir = file('webapps')
+
+    // Copy from gulp output
+    dependsOn gulp_default
+    from gulp.workDir.absolutePath + '/dist/'
 }
 
 /* Change context path (base url). otherwise defaults to name of project */

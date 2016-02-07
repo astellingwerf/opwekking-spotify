@@ -1,0 +1,79 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../playlist-item/playlist-item.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<dom-module name="playlist-">
+
+  <template>
+    <iron-ajax url="[[playlistUrl]]" last-response="{{playlist}}" auto></iron-ajax>
+
+    <iron-ajax id="createSpotifyPlaylist" method="POST" url="[[playlistUrl]]to-spotify" ></iron-ajax>
+
+    <iron-ajax url="[[playlistUrl]]"
+               body="{{jsonPlaylist}}"
+               debounce-duration="250"
+               method="PUT"
+               content-type="application/json"
+               auto></iron-ajax>
+
+    <paper-input label="Playlist name" value="{{playlist.name}}" class="title spacer"></paper-input>
+
+    <paper-fab icon="add" on-click="handleClick"></paper-fab>
+
+    <spotify-authentication>
+      <paper-button on-click="createPlaylist">
+        <iron-image src="../../images/create_playlist-green.svg" style="width:244px;"></iron-image>
+      </paper-button>
+    </spotify-authentication>
+
+    <iron-list items="{{playlist.items}}">
+      <template>
+        <playlist-item
+          song-bundle="{{item.bundle}}"
+          song-number="{{item.number}}"></playlist-item>
+      </template>
+    </iron-list>
+  </template>
+
+  <script>
+        Polymer({
+          is: 'playlist-',
+          properties: {
+            playlistUrl: {
+              type: String
+            },
+            playlist: {
+              notify: true
+            },
+            jsonPlaylist: {
+              type: String,
+              computed: 'getAjaxBody(playlist.*)'
+            }
+          },
+          observers: [
+            'playlistChanged(playlist.*)'
+          ],
+          playlistChanged: function(changeRecord) {
+            this.set(changeRecord.path, changeRecord.value);
+          },
+          /* jshint unused:true */
+          getAjaxBody: function(ignore) {
+            /* jshint unused:false */
+            return JSON.stringify(this.playlist);
+          },
+          handleClick: function() {
+            this.push('playlist.items', {bundle:   'Opwekking'});
+          },
+          /* jshint unused:true */
+          createPlaylist: function(event) {
+            /* jshint unused:false */
+            this.$.createSpotifyPlaylist.generateRequest();
+          },
+        });
+  </script>
+
+</dom-module>

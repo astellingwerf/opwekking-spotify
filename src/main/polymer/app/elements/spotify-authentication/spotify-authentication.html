@@ -1,0 +1,79 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+
+<dom-module name="spotify-authentication">
+
+  <template>
+    <style is="custom-style">
+      .avatar {
+      height: 64px;
+      width: 64px;
+      border-radius: 32px;
+      box-sizing: border-box;
+      background-color: #DDD;
+      }
+      .pad {
+      padding: 0 16px;
+      @apply(--layout-flex);
+      @apply(--layout-vertical);
+      }
+    </style>
+    <iron-ajax id="getUserDetails"
+               url="/api/spotify/user"
+               on-error="handleUserAuthError"
+               on-response="handleUserLoggedIn"
+               verbose="true"
+               last-response="{{userData}}" auto></iron-ajax>
+
+    <div id="notLoggedInDiv" style="display: block">
+      <paper-button on-click="openSpotifyLogin">
+        <iron-image src="../../images/log_in-desktop.svg" style="width:244px;"></iron-image>
+      </paper-button>
+    </div>
+    <div id="loggedInDiv" style="display: none">
+      <content></content>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'spotify-authentication',
+      properties: {
+        songNumber: {
+          type: Number,
+          notify: true
+        }
+      },
+
+      /* jshint unused:true */
+      handleUserAuthError: function(event) {
+        /* jshint unused:false */
+        this.switchVisibleIcon(false);
+      },
+      /* jshint unused:true */
+      handleUserLoggedIn: function(event) {
+        /* jshint unused:false */
+        this.switchVisibleIcon(true);
+      },
+
+      switchVisibleIcon: function(loggedIn) {
+        this.$.loggedInDiv.style.display = loggedIn ? 'block' : 'none';
+        this.$.notLoggedInDiv.style.display = !loggedIn ? 'block' : 'none';
+      },
+
+      /* jshint unused:true */
+      openSpotifyLogin: function(event) {
+        /* jshint unused:false */
+        var checkAuthorization = this.$.getUserDetails;
+        window.open('/api/spotify/authenticate').onbeforeunload = function() {
+          checkAuthorization.generateRequest();
+        };
+      },
+
+      arrayItem: function(change, index, path) {
+        return this.get(path, change.base[index]);
+      }
+    });
+  </script>
+
+</dom-module>

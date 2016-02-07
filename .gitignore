@@ -13,4 +13,6 @@ build/
 
 .gradle/
 
+node_modules/
+
 webapps/

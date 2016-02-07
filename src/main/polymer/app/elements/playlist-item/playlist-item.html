@@ -1,0 +1,79 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<!--<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">-->
+<!--<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">-->
+<!--<link rel="import" href="../../bower_components/paper-item/paper-item.html">-->
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+
+
+
+<dom-module name="playlist-item">
+
+  <template>
+    <style is="custom-style">
+      .item {
+        @apply(--layout-horizontal);
+        margin: 16px 16px 0 16px;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: white;
+        border: 1px solid #ddd;
+      }
+      .avatar {
+        height: 64px;
+        width: 64px;
+        border-radius: 32px;
+        box-sizing: border-box;
+        background-color: #DDD;
+      }
+      .pad {
+        padding: 0 16px;
+        @apply(--layout-flex);
+        @apply(--layout-vertical);
+      }
+
+      .primary {
+        font-size: 16px;
+        font-weight: bold;
+      }
+    </style>
+    <iron-ajax url="/api/opwekking/bundle/[[songBundle]]/number/[[songNumber]]"
+               last-response="{{songMetaData}}" auto></iron-ajax>
+
+    <div class="item">
+      <iron-image class="avatar" src="[[arrayItem(songMetaData.albumCovers.*, 2, 'url')]]" sizing="cover"></iron-image>
+      <div class="pad">
+        <div class="primary">[[songMetaData.title]]</div>
+        <paper-input label="Bundle" value="{{songBundle}}"></paper-input>
+        <paper-input label="Number" value="{{songNumber}}" prevent-invalid-input allowed-pattern="[0-9]"></paper-input>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'playlist-item',
+      properties: {
+        songBundle: {
+          type: String,
+          value: 'Opwekking',
+          notify: true
+        },
+        songNumber: {
+          type: Number,
+          notify: true
+        }
+      },
+      // first argument is the change record for the array change,
+      // change.base is the array specified in the binding
+      arrayItem: function(change, index, path) {
+        // this.get(path, root) returns a value for a path
+        // relative to a root object.
+        return this.get(path, change.base[index]);
+      },
+    });
+
+  </script>
+
+</dom-module>
