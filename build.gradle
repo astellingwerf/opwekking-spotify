@@ -14,6 +14,7 @@ dependencies {
     providedCompile 'javax.servlet:servlet-api:2.5'
     compile 'org.codehaus.groovy:groovy:2.4.+'
     compile 'org.codehaus.groovy:groovy-json:2.4.+'
+    compile 'org.codehaus.groovy:groovy-xml:2.4.+'
     compile 'se.michaelthelin.spotify:spotify-web-api-java:1.+'
     compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
     runtime 'org.glassfish.jersey.containers:jersey-container-servlet:2.15'
